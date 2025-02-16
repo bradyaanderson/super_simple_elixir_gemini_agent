@@ -15,55 +15,69 @@ defmodule GeminiChat do
   defp chat_loop(history) do
     user_input = IO.gets("\nYou: ") |> String.trim()
 
-    if user_input == "quit" do
-      IO.puts("Goodbye!")
-    else
-      case get_response(user_input, history) do
-        {:ok, response, updated_history} ->
-          IO.puts("\nGemini: #{response}")
-          chat_loop(updated_history)
+    case user_input do
+      "quit" ->
+        IO.puts("Goodbye!")
 
-        {:error, reason} ->
-          IO.puts("Error: #{reason}")
-          chat_loop(history)
-      end
+      _ ->
+        case get_response(user_input, history) do
+          {:ok, response, updated_history} ->
+            IO.puts("\nGemini: #{response}")
+            chat_loop(updated_history)
+
+          {:error, reason} ->
+            IO.puts("Error: #{reason}")
+            chat_loop(history)
+        end
     end
   end
 
   defp get_response(user_input, history) do
-    api_key = System.get_env("GEMINI_API_KEY") || DotenvParser.load_file(".env")["GEMINI_API_KEY"]
+    api_key = fetch_api_key()
 
-    if api_key do
-      # Append new user message at the end of history (chronological)
-      updated_history = history ++ [%{role: "user", parts: [%{text: user_input}]}]
+    case api_key do
+      nil ->
+        {:error, "GEMINI_API_KEY not found"}
 
-      url = "#{@gemini_api_url}?key=#{api_key}"
+      _ ->
+        updated_history = append_user(history, user_input)
+        url = "#{@gemini_api_url}?key=#{api_key}"
 
-      # Send the conversation as "contents" in the same format as your original code
-      case Req.post(url, json: %{"contents" => updated_history}) do
-        {:ok, %Req.Response{status: 200, body: body}} ->
-          # Extract the model's text
-          text_response =
-            body["candidates"]
-            |> List.first()
-            |> Map.get("content", %{})
-            |> Map.get("parts", [%{}])
-            |> List.first()
-            |> Map.get("text", "No response")
+        case Req.post(url, json: %{"contents" => updated_history}) do
+          {:ok, %Req.Response{status: 200, body: body}} ->
+            text_response = extract_text(body)
+            final_history = append_model(updated_history, text_response)
+            {:ok, text_response, final_history}
 
-          # Append model response to the history
-          final_history = updated_history ++ [%{role: "model", parts: [%{text: text_response}]}]
-          {:ok, text_response, final_history}
+          {:ok, %Req.Response{status: status, body: body}} ->
+            {:error, "API returned status #{status}: #{inspect(body)}"}
 
-        {:ok, %Req.Response{status: status, body: body}} ->
-          {:error, "API returned status #{status}: #{inspect(body)}"}
-
-        {:error, reason} ->
-          {:error, "Request failed: #{inspect(reason)}"}
-      end
-    else
-      {:error, "GEMINI_API_KEY not found"}
+          {:error, reason} ->
+            {:error, "Request failed: #{inspect(reason)}"}
+        end
     end
+  end
+
+  defp fetch_api_key() do
+    System.get_env("GEMINI_API_KEY") ||
+      DotenvParser.load_file(".env")["GEMINI_API_KEY"]
+  end
+
+  defp append_user(history, user_text) do
+    history ++ [%{role: "user", parts: [%{text: user_text}]}]
+  end
+
+  defp append_model(history, model_text) do
+    history ++ [%{role: "model", parts: [%{text: model_text}]}]
+  end
+
+  defp extract_text(body) do
+    body["candidates"]
+    |> List.first()
+    |> Map.get("content", %{})
+    |> Map.get("parts", [%{}])
+    |> List.first()
+    |> Map.get("text", "No response")
   end
 end
 
