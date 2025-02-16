@@ -1,0 +1,35 @@
+# Build artifacts
+/_build/
+**/*.beam
+
+# Dependencies
+/deps/
+.mix/
+
+# ElixirLS (Elixir Language Server) files
+.elixir_ls/
+
+# Erlang Language Server files
+.erlang_ls/
+
+# Compiled output
+/test/tmp/
+node_modules/
+cover/
+*.ez
+
+# IEx history
+.iex.exs
+
+# Editor-specific files
+/.vscode/
+/.idea/
+/*.swp
+*.swo
+*.bak
+
+# MacOS system files
+.DS_Store
+
+# Secrets and environment variables
+.env
