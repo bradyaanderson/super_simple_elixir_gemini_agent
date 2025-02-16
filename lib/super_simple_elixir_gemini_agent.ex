@@ -1,13 +1,11 @@
-Mix.install([
-  {:req, "~> 0.4"},
-  {:jason, "~> 1.4"},
-  {:dotenv_parser, "~> 2.0"}
-])
-
 defmodule GeminiChat do
+  @moduledoc """
+  A simple chat interface using the Gemini model that retains chat history.
+  """
+
   @gemini_api_url "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 
-  def start() do
+  def start do
     IO.puts("Welcome to Gemini Chat! (Type 'quit' to exit)")
     chat_loop([])
   end
@@ -58,7 +56,7 @@ defmodule GeminiChat do
     end
   end
 
-  defp fetch_api_key() do
+  defp fetch_api_key do
     System.get_env("GEMINI_API_KEY") ||
       DotenvParser.load_file(".env")["GEMINI_API_KEY"]
   end
@@ -80,5 +78,3 @@ defmodule GeminiChat do
     |> Map.get("text", "No response")
   end
 end
-
-GeminiChat.start()
