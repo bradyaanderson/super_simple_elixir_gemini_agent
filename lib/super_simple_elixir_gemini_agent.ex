@@ -3,11 +3,14 @@ defmodule SuperSimpleElixirGeminiAgent do
   A simple chat interface using the Gemini model that retains chat history.
   """
 
+  use Application
+
   @gemini_api_url "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 
-  def start do
+  def start(_type, _args) do
     IO.puts("Welcome to Gemini Chat! (Type 'quit' to exit)")
     chat_loop([])
+    {:ok, self()}
   end
 
   defp chat_loop(history) do

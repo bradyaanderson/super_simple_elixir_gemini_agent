@@ -40,7 +40,7 @@ GEMINI_API_KEY=your_api_key_here
 Run the chat agent:
 
 ```bash
-mix run -e "SuperSimpleElixirGeminiAgent.start()"
+mix run 
 ```
 
 Type 'quit' to exit the conversation.
