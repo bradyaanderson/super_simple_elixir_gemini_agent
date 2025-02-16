@@ -19,8 +19,8 @@ A minimalist implementation of a conversational AI agent using Google's Gemini m
 1. Clone the repository:
 
 ```bash
-git clone git@github.com:bradyaanderson/super-simple-elixir-gemini-agent.git
-cd super-simple-elixir-gemini-agent
+git clone git@github.com:bradyaanderson/super_simple_elixir_gemini_agent.git
+cd super_simple_elixir_gemini_agent
 ```
 
 1. Install dependencies using Poetry:

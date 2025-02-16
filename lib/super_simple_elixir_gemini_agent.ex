@@ -8,7 +8,7 @@ defmodule SuperSimpleElixirGeminiAgent do
   @gemini_api_url "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
 
   def start(_type, _args) do
-    IO.puts("Welcome to Gemini Chat! (Type 'quit' to exit)")
+    IO.puts("Welcome to Super Simple Gemini Agent! (Type 'quit' to exit)")
     chat_loop([])
     {:ok, self()}
   end
