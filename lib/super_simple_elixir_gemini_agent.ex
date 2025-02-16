@@ -1,4 +1,4 @@
-defmodule GeminiChat do
+defmodule SuperSimpleElixirGeminiAgent do
   @moduledoc """
   A simple chat interface using the Gemini model that retains chat history.
   """

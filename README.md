@@ -1,21 +1,65 @@
-# SuperSimpleElixirGeminiAgent
+# Super Simple Elixir Gemini Agent 
 
-**TODO: Add description**
+A minimalist implementation of a conversational AI agent using Google's Gemini model. This agent maintains conversation history to provide contextual responses while keeping the codebase as simple as possible.
+
+## Features
+
+- Conversational memory (maintains chat history)
+- Simple agent loop (receive input → process → respond)
+- Easy-to-understand implementation
+- Environment variable configuration
+
+## Prerequisites
+
+- Elixir 1.16 or later
+- [Gemini API key](https://aistudio.google.com/app/apikey)
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `super_simple_elixir_gemini_agent` to your list of dependencies in `mix.exs`:
+1. Clone the repository:
 
-```elixir
-def deps do
-  [
-    {:super_simple_elixir_gemini_agent, "~> 0.1.0"}
-  ]
-end
+```bash
+git clone git@github.com:bradyaanderson/super-simple-elixir-gemini-agent.git
+cd super-simple-elixir-gemini-agent
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/super_simple_elixir_gemini_agent>.
+1. Install dependencies using Poetry:
 
+```bash
+mix deps.get
+```
+
+1. Create a `.env` file in the project root and add your Gemini API key:
+
+```bash
+GEMINI_API_KEY=your_api_key_here
+```
+
+## Usage
+
+Run the chat agent:
+
+```bash
+mix run -e "SuperSimpleElixirGeminiAgent.start()"
+```
+
+Type 'quit' to exit the conversation.
+
+## How It Works
+
+The agent operates as a simple loop:
+
+1. Receives user input
+2. Maintains a history of the conversation
+3. Sends the full conversation history to Gemini for context
+4. Returns Gemini's response
+5. Repeats
+
+## Limitations
+
+- No long-term memory (history is lost when the program exits)
+- No ability to use external tools or APIs
+- Limited to text-only interactions
+- No explicit goal setting or planning capabilities
+- No error recovery for API failures
+- No support for streaming responses
