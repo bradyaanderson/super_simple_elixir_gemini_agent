@@ -57,8 +57,13 @@ defmodule SuperSimpleElixirGeminiAgent do
   end
 
   defp fetch_api_key do
-    System.get_env("GEMINI_API_KEY") ||
-      DotenvParser.load_file(".env")["GEMINI_API_KEY"]
+    if System.get_env("GEMINI_API_KEY") do
+      System.get_env("GEMINI_API_KEY")
+    else
+      DotenvParser.parse_file(".env")
+      |> Enum.into(%{})
+      |> Map.get("GEMINI_API_KEY")
+    end
   end
 
   defp append_user(history, user_text) do
